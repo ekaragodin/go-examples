@@ -40,6 +40,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
+  t.Execute(w, getEntries(path))
+}
+
+func getEntries(path string) []Entry {
   entries := []Entry{}
   files, _ := ioutil.ReadDir(path)
   for _, e := range files {
@@ -48,6 +52,5 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
       FullName: path + "/" + e.Name(),
     })
   }
-
-  t.Execute(w, entries)
+  return entries
 }
