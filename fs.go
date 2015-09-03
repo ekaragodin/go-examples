@@ -2,9 +2,9 @@ package main
 
 import (
   "net/http"
-  "fmt"
   "log"
   "io/ioutil"
+  "html/template"
 )
 
 var root = "/";
@@ -16,10 +16,12 @@ func main() {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-  entries, _ := ioutil.ReadDir(root)
-  for _, entry := range entries {
-    fmt.Println(entry.Name())
+  t, err := template.ParseFiles("templates/fs.html")
+  if err != nil {
+    log.Println(err.Error())
+    http.Error(w, http.StatusText(500), 500)
   }
 
-  fmt.Fprintf(w, "Hello");
+  entries, _ := ioutil.ReadDir(root)
+  t.Execute(w, entries)
 }
