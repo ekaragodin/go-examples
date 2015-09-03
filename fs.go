@@ -5,6 +5,7 @@ import (
   "log"
   "io/ioutil"
   "html/template"
+  "os"
 )
 
 var root = "/";
@@ -26,10 +27,17 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     path = root
   }
 
+  if _, err := os.Stat(path); os.IsNotExist(err) {
+    log.Println(err.Error())
+    http.Error(w, http.StatusText(404), 404)
+    return
+  }
+
   t, err := template.ParseFiles("templates/fs.html")
   if err != nil {
     log.Println(err.Error())
     http.Error(w, http.StatusText(500), 500)
+    return
   }
 
   entries := []Entry{}
