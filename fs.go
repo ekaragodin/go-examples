@@ -6,6 +6,7 @@ import (
   "io/ioutil"
   "html/template"
   "os"
+  "sort"
 )
 
 var root = "/";
@@ -14,6 +15,24 @@ type Entry struct {
   Name string
   FullName string
   IsDir bool
+}
+
+type ByIsDir []Entry
+
+func (slice ByIsDir) Len() int {
+  return len(slice)
+}
+
+func (slice ByIsDir) Less(i, j int) bool {
+  if (slice[i].IsDir != slice[j].IsDir) {
+    return slice[i].IsDir
+  }
+
+  return slice[i].Name < slice[j].Name
+}
+
+func (slice ByIsDir) Swap(i, j int) {
+  slice[i], slice[j] = slice[j], slice[i]
 }
 
 func main() {
@@ -54,5 +73,7 @@ func getEntries(path string) []Entry {
       IsDir: e.IsDir(),
     })
   }
+
+  sort.Sort(ByIsDir(entries))
   return entries
 }
