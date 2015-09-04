@@ -67,12 +67,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func getEntries(currentPath string) []Entry {
   entries := []Entry{}
 
-  parent := Entry{
-    Name: "..",
-    FullName: path.Join(currentPath, ".."),
-    IsDir: true,
+  if (currentPath != root) {
+    parent := Entry{
+      Name: "..",
+      FullName: path.Join(currentPath, ".."),
+      IsDir: true,
+    }
+    entries = append(entries, parent)
   }
-  entries = append(entries, parent)
 
   files, _ := ioutil.ReadDir(currentPath)
   for _, e := range files {
