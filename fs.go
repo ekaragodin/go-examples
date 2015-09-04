@@ -65,6 +65,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func getEntries(path string) []Entry {
   entries := []Entry{}
+
+  parent := Entry{
+    Name: "..",
+    FullName: path + "/..",
+    IsDir: true,
+  }
+  entries = append(entries, parent)
+
   files, _ := ioutil.ReadDir(path)
   for _, e := range files {
     entries = append(entries, Entry{
