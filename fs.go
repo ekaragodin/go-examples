@@ -13,6 +13,7 @@ var root = "/";
 type Entry struct {
   Name string
   FullName string
+  IsDir bool
 }
 
 func main() {
@@ -50,6 +51,7 @@ func getEntries(path string) []Entry {
     entries = append(entries, Entry{
       Name: e.Name(),
       FullName: path + "/" + e.Name(),
+      IsDir: e.IsDir(),
     })
   }
   return entries

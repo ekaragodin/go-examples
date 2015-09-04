@@ -15,7 +15,16 @@
     <tbody>
       {{range .}}
       <tr>
-        <td><a href="/?path={{.FullName}}">{{.Name}}</a></td>
+        <td>
+          <a href="/?path={{.FullName}}">
+            {{if .IsDir}}
+            <span class="glyphicon glyphicon-folder-close"></span>
+            {{else}}
+            <span class="glyphicon glyphicon-file"></span>
+            {{end}}
+            {{.Name}}
+          </a>
+        </td>
       </tr>
       {{end}}
     </tbody>
