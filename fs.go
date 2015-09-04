@@ -42,12 +42,12 @@ func main() {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-  path := r.URL.Query().Get("path")
-  if (path == "") {
-    path = root
+  currentPath := r.URL.Query().Get("currentPath")
+  if (currentPath == "") {
+    currentPath = root
   }
 
-  if _, err := os.Stat(path); os.IsNotExist(err) {
+  if _, err := os.Stat(currentPath); os.IsNotExist(err) {
     log.Println(err.Error())
     http.Error(w, http.StatusText(404), 404)
     return
@@ -60,24 +60,24 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  t.Execute(w, getEntries(path))
+  t.Execute(w, getEntries(currentPath))
 }
 
-func getEntries(path string) []Entry {
+func getEntries(currentPath string) []Entry {
   entries := []Entry{}
 
   parent := Entry{
     Name: "..",
-    FullName: path + "/..",
+    FullName: currentPath + "/..",
     IsDir: true,
   }
   entries = append(entries, parent)
 
-  files, _ := ioutil.ReadDir(path)
+  files, _ := ioutil.ReadDir(currentPath)
   for _, e := range files {
     entries = append(entries, Entry{
       Name: e.Name(),
-      FullName: path + "/" + e.Name(),
+      FullName: currentPath + "/" + e.Name(),
       IsDir: e.IsDir(),
     })
   }
