@@ -7,6 +7,7 @@ import (
   "html/template"
   "os"
   "sort"
+  "path"
 )
 
 var root = "/";
@@ -42,7 +43,7 @@ func main() {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-  currentPath := r.URL.Query().Get("currentPath")
+  currentPath := r.URL.Query().Get("path")
   if (currentPath == "") {
     currentPath = root
   }
@@ -68,7 +69,7 @@ func getEntries(currentPath string) []Entry {
 
   parent := Entry{
     Name: "..",
-    FullName: currentPath + "/..",
+    FullName: path.Join(currentPath, ".."),
     IsDir: true,
   }
   entries = append(entries, parent)
@@ -77,7 +78,7 @@ func getEntries(currentPath string) []Entry {
   for _, e := range files {
     entries = append(entries, Entry{
       Name: e.Name(),
-      FullName: currentPath + "/" + e.Name(),
+      FullName: path.Join(currentPath, e.Name()),
       IsDir: e.IsDir(),
     })
   }
