@@ -17,10 +17,14 @@
       <tr>
         <td>
           <a href="/?path={{.FullName}}">
-            {{if .IsDir}}
-            <span class="glyphicon glyphicon-folder-close"></span>
+            {{if .IsParent}}
+              <span class="glyphicon glyphicon-level-up"></span>
             {{else}}
-            <span class="glyphicon glyphicon-file"></span>
+              {{if .IsDir}}
+                <span class="glyphicon glyphicon-folder-close"></span>
+              {{else}}
+                <span class="glyphicon glyphicon-file"></span>
+              {{end}}
             {{end}}
             {{.Name}}
           </a>

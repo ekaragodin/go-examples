@@ -16,6 +16,7 @@ type Entry struct {
   Name string
   FullName string
   IsDir bool
+  IsParent bool
 }
 
 type ByIsDir []Entry
@@ -72,6 +73,7 @@ func getEntries(currentPath string) []Entry {
       Name: "..",
       FullName: path.Join(currentPath, ".."),
       IsDir: true,
+      IsParent: true,
     }
     entries = append(entries, parent)
   }
