@@ -6,6 +6,7 @@ import (
   "io/ioutil"
   "html/template"
   "os"
+  "os/user"
   "sort"
   "path"
   "flag"
@@ -39,7 +40,12 @@ func (slice ByIsDir) Swap(i, j int) {
 }
 
 func main() {
-  flag.StringVar(&root, "root", "/", "Root folder.")
+  currentUser, err := user.Current()
+  if err != nil {
+      log.Fatal(err)
+  }
+
+  flag.StringVar(&root, "root", currentUser.HomeDir, "Root folder. Default is hode dir.")
   flag.Parse()
 
   http.HandleFunc("/", indexHandler)
