@@ -49,9 +49,16 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     currentPath = root
   }
 
-  if _, err := os.Stat(currentPath); os.IsNotExist(err) {
+  stat, err := os.Stat(currentPath)
+
+  if os.IsNotExist(err) {
     log.Println(err.Error())
     http.Error(w, http.StatusText(404), 404)
+    return
+  }
+
+  if !stat.IsDir() {
+    http.ServeFile(w, r, currentPath)
     return
   }
 
