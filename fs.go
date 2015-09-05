@@ -8,9 +8,10 @@ import (
   "os"
   "sort"
   "path"
+  "flag"
 )
 
-var root = "/";
+var root string
 
 type Entry struct {
   Name string
@@ -38,6 +39,9 @@ func (slice ByIsDir) Swap(i, j int) {
 }
 
 func main() {
+  flag.StringVar(&root, "root", "/", "Root folder.")
+  flag.Parse()
+
   http.HandleFunc("/", indexHandler)
   log.Println("Server is started...")
   http.ListenAndServe(":8000", nil)
