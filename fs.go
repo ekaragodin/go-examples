@@ -62,7 +62,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   showHiddenFilesCookie, err := r.Cookie("showHiddenFiles")
-  showHiddenFiles = showHiddenFilesCookie.Value == "1"
+  if err == nil {
+    showHiddenFiles = showHiddenFilesCookie.Value == "1"
+  } else {
+    showHiddenFiles = false
+  }
 
   stat, err := os.Stat(currentPath)
 
