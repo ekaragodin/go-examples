@@ -10,9 +10,11 @@ import (
   "sort"
   "path"
   "flag"
+  "strings"
 )
 
 var root string
+var showHiddenFiles bool
 
 type Entry struct {
   Name string
@@ -59,6 +61,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     currentPath = root
   }
 
+  showHiddenFilesCookie, err := r.Cookie("showHiddenFiles")
+  showHiddenFiles = showHiddenFilesCookie.Value == "1"
+
   stat, err := os.Stat(currentPath)
 
   if os.IsNotExist(err) {
@@ -97,6 +102,10 @@ func getEntries(currentPath string) []Entry {
 
   files, _ := ioutil.ReadDir(currentPath)
   for _, e := range files {
+    if !showHiddenFiles && strings.HasPrefix(e.Name(), ".") {
+      continue
+    }
+
     entries = append(entries, Entry{
       Name: e.Name(),
       FullName: path.Join(currentPath, e.Name()),
