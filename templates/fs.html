@@ -41,11 +41,15 @@
   </div>
 
   <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <script>
   $(function () {
     var showHiddenFlag = $('#showHiddenFlag');
+
+    showHiddenFlag.prop('checked', Number($.cookie('showHiddenFiles')));
     showHiddenFlag.change(function () {
-      console.log(showHiddenFlag.is(':checked'));
+      $.cookie('showHiddenFiles', Number(showHiddenFlag.is(':checked')));
+      window.location.reload();
     });
   });
   </script>
