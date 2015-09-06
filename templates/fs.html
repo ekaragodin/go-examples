@@ -10,6 +10,11 @@
 <body>
   <div class="container">
     <h1>File System</h1>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="showHiddenFlag"/> Show hidden files
+      </label>
+    </div>
 
     <table class="table">
     <tbody>
@@ -34,5 +39,15 @@
     </tbody>
     </table>
   </div>
+
+  <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script>
+  $(function () {
+    var showHiddenFlag = $('#showHiddenFlag');
+    showHiddenFlag.change(function () {
+      console.log(showHiddenFlag.is(':checked'));
+    });
+  });
+  </script>
 </body>
 </html>
