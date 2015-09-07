@@ -61,7 +61,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     currentPath = "."
   }
 
-  fullCurrentPath := path.Join(root, currentPath)
+  fullCurrentPath := path.Clean(path.Join(root, currentPath))
+
+  if !strings.HasPrefix(fullCurrentPath, root) {
+    http.Error(w, http.StatusText(403), 403)
+    return
+  }
 
   showHiddenFilesCookie, err := r.Cookie("showHiddenFiles")
   if err == nil {
