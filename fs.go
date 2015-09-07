@@ -47,7 +47,7 @@ func main() {
       log.Fatal(err)
   }
 
-  flag.StringVar(&root, "root", currentUser.HomeDir, "Root folder. Default is hode dir.")
+  flag.StringVar(&root, "root", currentUser.HomeDir, "Root folder. Default is home dir.")
   flag.Parse()
 
   http.HandleFunc("/", indexHandler)
@@ -57,9 +57,7 @@ func main() {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
   currentPath := r.URL.Query().Get("path")
-  if (currentPath == "") {
-    currentPath = root
-  }
+  fullCurrentPath := path.Join(root, currentPath)
 
   showHiddenFilesCookie, err := r.Cookie("showHiddenFiles")
   if err == nil {
@@ -68,7 +66,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     showHiddenFiles = false
   }
 
-  stat, err := os.Stat(currentPath)
+  stat, err := os.Stat(fullCurrentPath)
 
   if os.IsNotExist(err) {
     log.Println(err.Error())
@@ -77,7 +75,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   if !stat.IsDir() {
-    http.ServeFile(w, r, currentPath)
+    http.ServeFile(w, r, fullCurrentPath)
     return
   }
 
@@ -94,7 +92,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func getEntries(currentPath string) []Entry {
   entries := []Entry{}
 
-  if (currentPath != root) {
+  if (currentPath != "") {
     parent := Entry{
       Name: "..",
       FullName: path.Join(currentPath, ".."),
@@ -104,7 +102,7 @@ func getEntries(currentPath string) []Entry {
     entries = append(entries, parent)
   }
 
-  files, _ := ioutil.ReadDir(currentPath)
+  files, _ := ioutil.ReadDir(path.Join(root, currentPath))
   for _, e := range files {
     if !showHiddenFiles && strings.HasPrefix(e.Name(), ".") {
       continue
