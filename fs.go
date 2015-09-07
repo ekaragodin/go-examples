@@ -132,6 +132,12 @@ func getBreadcrumbs(currentPath string) []BreadcrumbsItem {
     result = append([]BreadcrumbsItem{item}, result...)
   }
 
+  rootItem := BreadcrumbsItem{
+    Name: "Home",
+    Path: ".",
+  }
+  result = append([]BreadcrumbsItem{rootItem}, result...)
+
   return result
 }
 
