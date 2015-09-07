@@ -57,6 +57,10 @@ func main() {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
   currentPath := r.URL.Query().Get("path")
+  if (currentPath == "") {
+    currentPath = "."
+  }
+
   fullCurrentPath := path.Join(root, currentPath)
 
   showHiddenFilesCookie, err := r.Cookie("showHiddenFiles")
@@ -92,7 +96,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func getEntries(currentPath string) []Entry {
   entries := []Entry{}
 
-  if (currentPath != "") {
+  if (currentPath != ".") {
     parent := Entry{
       Name: "..",
       FullName: path.Join(currentPath, ".."),
