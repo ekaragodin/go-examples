@@ -16,9 +16,21 @@
       </label>
     </div>
 
+    <ol class="breadcrumb">
+      {{range .Breadcrumbs}}
+          {{if .Path}}
+            <li>
+              <a href="/?path={{.Path}}">{{.Name}}</a>
+            </li>
+          {{else}}
+            <li class="active">{{.Name}}</li>
+          {{end}}
+      {{end}}
+    </ol>
+
     <table class="table">
     <tbody>
-      {{range .}}
+      {{range .Entries}}
       <tr>
         <td>
           <a href="/?path={{.FullName}}">

@@ -41,6 +41,16 @@ func (slice ByIsDir) Swap(i, j int) {
   slice[i], slice[j] = slice[j], slice[i]
 }
 
+type BreadcrumbsItem struct {
+  Name string
+  Path string
+}
+
+type IndexData struct {
+  Entries []Entry
+  Breadcrumbs []BreadcrumbsItem
+}
+
 func main() {
   currentUser, err := user.Current()
   if err != nil {
@@ -95,7 +105,34 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  t.Execute(w, getEntries(currentPath))
+  t.Execute(w, IndexData{
+    Entries: getEntries(currentPath),
+    Breadcrumbs: getBreadcrumbs(currentPath),
+  })
+}
+
+func getBreadcrumbs(currentPath string) []BreadcrumbsItem {
+  result := []BreadcrumbsItem{}
+  dirPath := currentPath
+
+  for dirPath != "." {
+    itemName := path.Base(dirPath)
+    itemPath := dirPath
+
+    if itemPath == currentPath {
+      itemPath = ""
+    }
+
+    item := BreadcrumbsItem{
+      Name: itemName,
+      Path: itemPath,
+    }
+    dirPath = path.Dir(dirPath)
+
+    result = append([]BreadcrumbsItem{item}, result...)
+  }
+
+  return result
 }
 
 func getEntries(currentPath string) []Entry {
