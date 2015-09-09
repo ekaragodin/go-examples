@@ -12,7 +12,9 @@
     <h1>Image gallery</h1>
 
     {{range .}}
-      <img src="/images/{{.Src}}" alt="{{.Src}}">
+    <div class="col-lg-4">
+      <img src="/images/{{.Src}}" alt="{{.Src}}" class="img-responsive">
+    </div>
     {{end}}
   </div>
 
