@@ -10,6 +10,10 @@
 <body>
   <div class="container">
     <h1>Image gallery</h1>
+
+    {{range .}}
+    <p>{{.Src}}</p>
+    {{end}}
   </div>
 
   <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>

@@ -6,10 +6,16 @@ import (
   "log"
   "os"
   "path"
+  "io/ioutil"
+  "strings"
 )
 
 var templates = template.Must(template.ParseFiles("templates/gallery.html"))
 var dataDir string
+
+type Image struct {
+  Src string
+}
 
 func main() {
   dataDir = getDataDir()
@@ -25,9 +31,27 @@ func getDataDir() string {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-  err := templates.ExecuteTemplate(w, "gallery.html", nil)
+  err := templates.ExecuteTemplate(w, "gallery.html", getImages())
+
   if err != nil {
       http.Error(w, err.Error(), http.StatusInternalServerError)
       log.Println(err.Error())
   }
+}
+
+func getImages() []Image {
+  images := []Image{}
+  files, _ := ioutil.ReadDir(dataDir)
+  for _, file := range files {
+    if (strings.HasPrefix(file.Name(), ".")) {
+      continue
+    }
+
+    image := Image{
+      Src: file.Name(),
+    }
+    images = append(images, image)
+  }
+
+  return images
 }
