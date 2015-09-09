@@ -20,7 +20,10 @@ type Image struct {
 func main() {
   dataDir = getDataDir()
 
+  static := http.FileServer(http.Dir(dataDir))
+  http.Handle("/images/", http.StripPrefix("/images/", static))
   http.HandleFunc("/", indexHandler)
+
   log.Println("Server is started...")
   http.ListenAndServe(":8000", nil)
 }
